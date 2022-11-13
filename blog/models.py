@@ -8,7 +8,7 @@ class Users (models.Model):
     email = models.EmailField()
 
 class Ingredientes (models.Model):
-    ingrediente = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=100)
 
 class Receta (models.Model):
     titulo = models.CharField(max_length=100)

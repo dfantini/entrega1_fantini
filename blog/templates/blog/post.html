@@ -4,5 +4,21 @@
 
 {% block contenido %}
 
-
+<main class="mb-4">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg- col-xl-7 justify-content-center">
+                <div class="my-5">
+                    <button class="btn btn-primary text-uppercase"  type="button">
+                        <a href="{% url 'blog-post-crear-ingrediente' %}">Crear Ingrediente</a>
+                    </button>
+             
+                    <button class="btn btn-primary text-uppercase"  type="button">
+                        <a href="{% url 'blog-post-crear-post' %}">Crear Post</a>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
 {% endblock %}

@@ -7,7 +7,7 @@ from blog.models import Users, Ingredientes, Receta, ContactMe
 
 def blog_inicio (request):
     recetas = Receta.objects.all()
-    return render (request,'blog/index.html', {'recetas' : recetas})
+    return render (request,'blog/index.html', {"recetas":recetas})
 
 def blog_about (request):
     return render (request,'blog/about.html')
@@ -48,9 +48,26 @@ def blog_crear_ingrediente (request):
 ############ Start Crear Post ################
 
 def blog_crear_post (request):
-            return render (request,'blog/crear_ingrediente.html')
 
+    users = Users.objects.all()
+    ingredientes = Ingredientes.objects.all()
 
-    
-
+    contex = {
+        "users":users,
+        "ingrdientes":ingredientes
+    }
+       
+    if request.method == "POST":
+        titulo = request.POST["titulo"]
+        user_mail = request.POST.get('user_email')
+        for user in users:
+            if user.email == user_mail:
+                creador = Users.objects.get(id=user.id) 
+        ingredientes = request.POST.get('ingrdientes_seleccionados')
+        proceso = request.POST['proceso']
+        post = Receta (titulo = titulo, proceso = proceso, creador = creador ) #, ingrediente =ingredientes,
+        post.save()
+    return render (request,'blog/crear_post.html', contex )
 ############ END Crear Post ################
+
+############ Start Cargar Post ################

@@ -5,15 +5,17 @@
 
 {% block contenido %}
 
-{% if recets.id is null %}
-<h1>Recipe # {{recetas.id}}</h1>
+<!-- {% if recetas.id is null %} -->
+{% for receta in recetas %}
+<h1>Recetas # {{receta.id}}</h1>
     <div class="card my-4">
     <div class="card-body">
-        <h5 class="card-title">{{ recetas.titulo }}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">{{ recetas.creador }}</h6>
-        <p class="card-text">{{ recetas.proceso }}</p>
-        <p class="card-text">{{ recetas.ingrediente }} :: {{ recetas.cantidades }}</p>
+        <h5 class="card-title">Titulo : {{ receta.titulo }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">Creador : {{ receta.creador.email }}</h6>
+        <p class="card-text">Proceso: {{ receta.proceso }}</p>
+        <!-- <p class="card-text">{{ receta.ingrediente }} :: {{ receta.cantidades }}</p> -->
     </div>
     </div>
-{% endif %}
+{% endfor %}
+<!-- {% endif %} -->
 {% endblock %}

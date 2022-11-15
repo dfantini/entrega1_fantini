@@ -82,9 +82,14 @@ def blog_crear_post (request):
 def blog_buscar (request):
     if request.method == 'POST':
         buscar = request.POST['buscar']
-        recetas = Receta.objects.filter(titulo__icontains = buscar)
-        for receta in recetas.all():
-            ingredientes = receta.ingrediente.all()
-        return render(request, "blog/buscar.html", {'buscar':buscar, 'recetas': recetas, 'ingredientes':ingredientes})
+        if Receta.objects.filter(titulo__icontains = buscar):
+            recetas = Receta.objects.filter(titulo__icontains = buscar)
+            ingredientes = {''}
+            for receta in recetas.all():
+                ingredientes = receta.ingrediente.all()
+            return render(request, "blog/buscar.html", {'buscar':buscar, 'recetas': recetas, 'ingredientes':ingredientes})
+        else:
+            return render (request,'blog/error_busqueda.html', { "dato" : buscar })
+
     return render(request, "blog/buscar.html", {})
 ############ END Buscar Post ################

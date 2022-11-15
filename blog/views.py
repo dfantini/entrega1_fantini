@@ -1,6 +1,8 @@
-from django.http import HttpResponse
-from django.shortcuts import render
-from blog.models import Users, Ingredientes, Receta, ContactMe
+from django import forms
+from django.shortcuts import redirect, render
+
+from blog.forms import *
+from blog.models import *
 
 # Create your views here.
 
@@ -12,62 +14,77 @@ def blog_inicio (request):
 def blog_about (request):
     return render (request,'blog/about.html')
 
-def blog_post (request):
-    return render (request,'blog/post.html')
+############ Start Crear Usuario ################
+def blog_crear_usuario(request):
+    if request.method == 'POST':
+        form_user= FormCrearUsuario(request.POST)  
+        if form_user.is_valid():
+            data = form_user.cleaned_data
+            if User.objects.filter(email__icontains = data['email']):
+                return render (request,'blog/error_existe_en_db.html', { "dato" : data['email'] })
+            else:
+                user = User (nombre = data['nombre'], apellido = data['apellido'], email = data['email'] )
+                user.save()
+    form_user = FormCrearUsuario()
+    return render (request,'blog/crear_usuario.html', {'form_user':form_user} )
 
-### Es para crear users en la BDD
-def blog_sing_up (request):
-    if request.method == "POST":
-        nombre_usuario = request.POST['nombre']
-        apellido_usuario = request.POST['apellido']
-        email_usuario = request.POST['email']
-        user = Users ( nombre = nombre_usuario, apellido = apellido_usuario, email = email_usuario)
-        user.save()
-    return render (request,'blog/singup.html')
 ############ END Crear User ################
 
-def blog_contact (request):
-    return render (request,'blog/contact.html')
+############ Start ContactME Ingrdiente ################
+def blog_contacto (request):
+        if request.method == 'POST':
+            form_contacto = FormCrearContactMe (request.POST)  
+            if form_contacto.is_valid():
+                 data = form_contacto.cleaned_data
+                 print(data)
+                 mensaje = ContactMe (usuario = data['usuario'], mensaje = data['mensaje'] )
+                 mensaje.save()
+        form_contacto  = FormCrearContactMe()
+        return render (request,'blog/contact.html',{'form_contacto':form_contacto})
+############ END ContactME Ingrdiente ################
 
 
 ############ Start Crear Ingrdiente ################
 
 def blog_crear_ingrediente (request):
-        if request.method == "POST":
-            ingrediente_ingresado = request.POST["ingrediente"]
-            if Ingredientes.objects.filter(nombre__icontains = ingrediente_ingresado):
-                return render (request,'blog/error_existe_en_db.html', { "dato" : ingrediente_ingresado })
+    if request.method == 'POST':
+        form_ingrediente = FormCrearIngrediente (request.POST)  
+        if form_ingrediente .is_valid():
+            data = form_ingrediente.cleaned_data
+            if Ingrediente.objects.filter(nombre__icontains = data['nombre']):
+                return render (request,'blog/error_existe_en_db.html', { "dato" : data['nombre'] })
             else:
-                ingrediente = Ingredientes ( nombre = ingrediente_ingresado)
-                ingrediente.save()
-        return render (request,'blog/crear_ingrediente.html')
-    
-
+                user = Ingrediente (nombre = data['nombre'] )
+                user.save()
+    form_ingrediente  = FormCrearIngrediente()
+    return render (request,'blog/crear_ingrediente.html', {'form_ingrediente':form_ingrediente } )
 ############ END Crear Ingrdiente ################
+
 
 ############ Start Crear Post ################
 
-def blog_crear_post (request):
-
-    users = Users.objects.all()
-    ingredientes = Ingredientes.objects.all()
-
-    contex = {
-        "users":users,
-        "ingrdientes":ingredientes
-    }
-       
-    if request.method == "POST":
-        titulo = request.POST["titulo"]
-        user_mail = request.POST.get('user_email')
-        for user in users:
-            if user.email == user_mail:
-                creador = Users.objects.get(id=user.id) 
-        ingredientes = request.POST.get('ingrdientes_seleccionados')
-        proceso = request.POST['proceso']
-        post = Receta (titulo = titulo, proceso = proceso, creador = creador ) #, ingrediente =ingredientes,
-        post.save()
-    return render (request,'blog/crear_post.html', contex )
+def blog_crear_post (request): 
+    if request.method == 'POST':
+        form_receta = FormCrearReceta(request.POST)  
+        if form_receta.is_valid():
+            data = form_receta.cleaned_data
+            receta = Receta (titulo = data ['titulo'], proceso = data['proceso'], creador = data['creador'] )
+            receta.save()
+            list_ingredeintes = data['ingredientes']
+            for ingrediente in list_ingredeintes:
+                receta.ingrediente.add(ingrediente)
+            receta.save()
+    form_receta = FormCrearReceta()
+    return render (request,'blog/crear_post.html', {'form_receta':form_receta} )
 ############ END Crear Post ################
 
-############ Start Cargar Post ################
+############ Start Buscar Post ################
+def blog_buscar (request):
+    if request.method == 'POST':
+        buscar = request.POST['buscar']
+        recetas = Receta.objects.filter(titulo__icontains = buscar)
+        for receta in recetas.all():
+            ingredientes = receta.ingrediente.all()
+        return render(request, "blog/buscar.html", {'buscar':buscar, 'recetas': recetas, 'ingredientes':ingredientes})
+    return render(request, "blog/buscar.html", {})
+############ END Buscar Post ################

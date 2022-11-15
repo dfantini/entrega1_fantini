@@ -8,49 +8,14 @@
     <div class="container px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
-                <p>Crea tu ingrdiente aqui:</p>
+                <p>Crea Tu Receta Aqui:</p>
                 <div class="my-5">
-                    <form action="/blog/post/crear-post/" method="post">
+                    <form action="" method="post">
                         {% csrf_token %}
                         <div class="form-floating">
-                            <select name="user_email">
-                                <option value="user"> Selecione Su E-mail</option>
-                                {% for user in users %}
-                                    <option>{{ user.email }}</option>
-                                {% endfor %}
-                            </select>
+                            {{ form_receta.as_p}}
                         </div>
-                        <br/>
-                        <div class="form-floating">
-                            <input class="form-control" id="titulo" type="text" name ="titulo" placeholder="Ingrese el titulo.." data-sb-validations="required" />
-                            <label for="name">Titulo de la Receta</label>
-                            <div class="invalid-feedback" data-sb-feedback="titulo:required">El Ingrediente es requerido.</div>
-                        </div>
-                        <br />
-                        <div class="form-floating">
-                            <select name="ingrdientes_seleccionados">
-                                <option value="ingredientes"> Selecione Los Ingrdientes</option>
-                                {% for ingrediente in ingrdientes %}
-                                    <option>{{ ingrediente.nombre }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <br />
-                        <div class="form-floating">
-                            <textarea class="form-control" id="proceso" name ="proceso" placeholder="Ingrese el proceso aque..." style="height: 12rem" data-sb-validations="required"></textarea>
-                            <label for="message">Proceso</label>
-                            <div class="invalid-feedback" data-sb-feedback="proceso:required">El proceso es requirido.</div>
-                        </div>
-                        <br />
-
-                        <div class="d-none" id="submitSuccessMessage">
-                            <div class="text-center mb-3">
-                                <div class="fw-bolder">Su post se creo con exito!</div>
-                                <br />
-                            </div>
-                        </div>
-  
-                        <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error en crear el usuario!</div></div>
+                    
                         <input class="btn btn-primary text-uppercase"  type="submit" value = "Crear Post">
                     </form>
                 </div>
@@ -58,5 +23,4 @@
         </div>
     </div>
 </main>
-
 {% endblock %}

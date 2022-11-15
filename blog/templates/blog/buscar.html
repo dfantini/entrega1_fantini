@@ -1,0 +1,44 @@
+{% extends 'blog/base.html' %}
+
+{% load static %}
+
+{% block contenido %}
+
+<main class="mb-4">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <p>La Receta Buscada Esta Aqui:</p>
+                <div class="my-5">
+                        <div class="form-floating">
+                        {% if  buscar %}
+                            <h4>Buscaste {{ buscar }}</h4>
+                            <br/>
+                            {% for receta in recetas %}
+                            <h1>Recetas # {{receta.id}}</h1>
+                                <div class="card my-4">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Titulo : {{ receta.titulo }}</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">Creador : {{ receta.creador.email }}</h6>
+                                        <p class="card-text">Proceso: {{ receta.proceso }}</p> 
+                                        {% for ingrediente in ingredientes %}
+                                        <li>
+                                        {{ ingrediente }}
+                                        </li>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            
+                            {% endfor %}
+                        {% else %} 
+                            <h4>Tenias Que Buscar Recetas</h4>
+                        {% endif %}
+                       </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+    
+
